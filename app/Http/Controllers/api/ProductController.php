@@ -46,7 +46,7 @@ class ProductController extends Controller
 
         $tempProducts = json_decode($redis->get('temp_products'));
 
-        if (!count($tempProducts)) {
+        if (!$tempProducts) {
             $tempProducts = [];
         }
 
