@@ -45,6 +45,7 @@ class TransferProductsFromTempToDB extends Command
             DB::table('user_product')->insert([
                 'user_id' => $product->user_id,
                 'product_id' => $product->product_id,
+                'created_at' => $product->created_at,
             ]);
 
             DB::table('orders')->insert([
@@ -52,6 +53,7 @@ class TransferProductsFromTempToDB extends Command
                 'product_id' => $product->product_id,
                 'total_price' => $product->total_price,
                 'quantity' => $product->quantity,
+                'created_at' => $product->created_at,
             ]);
         }
 

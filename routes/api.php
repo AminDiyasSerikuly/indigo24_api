@@ -17,6 +17,7 @@ Route::prefix('/user')->group(function () {
     Route::post('/login', 'api\LoginController@login')->name('login');
     Route::post('products/buy', 'api\ProductController@buy')->middleware('auth:api');
     Route::get('/products', 'api\ProductController@show')->middleware('auth:api');
+    Route::get('products/payment-history', 'api\ProductController@payment_history')->middleware('auth:api');
 });
 
 

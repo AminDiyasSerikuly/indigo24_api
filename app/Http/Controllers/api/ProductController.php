@@ -19,9 +19,6 @@ class ProductController extends Controller
         $redis = Redis::connection();
         $userBalance = \Auth::user()->balance;
 
-        if ($request->total_price > $userBalance) {
-            return response(['message' => 'У вас недостаточно баланса']);
-        }
 
         $rules = [
             'product_id' => 'required',
@@ -43,16 +40,18 @@ class ProductController extends Controller
             return response(['message' => 'Вы уже имеете этот продукт']);
         }
 
+        $product = Product::where(['id' => $request->product_id])->first();
+        $total_price = ($product->price) * $request->quantity;
+
+        if ($total_price > $userBalance) {
+            return response(['message' => 'У вас недостаточно баланса']);
+        }
 
         $tempProducts = json_decode($redis->get('temp_products'));
 
         if (!$tempProducts) {
             $tempProducts = [];
         }
-
-
-        $product = Product::where(['id' => $request->product_id])->first();
-        $total_price = ($product->price) * $request->quantity;
 
         $newProducts = [
             'user_id' => \Auth::user()->id,
@@ -91,5 +90,12 @@ class ProductController extends Controller
             }
         }
         return response(['user_products' => (object)$productArray]);
+    }
+
+    public function payment_history()
+    {
+        $paymentHistory = Order::where(['user_id' => \Auth::user()->id])->get();
+
+        return response(['payment_history' => $paymentHistory]);
     }
 }
