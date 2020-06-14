@@ -12,7 +12,7 @@ class ProductSeeder extends Seeder
     public function run()
     {
         for ($var = 1; $var <= 100; $var++) {
-            DB::table('products-')->insert([
+            DB::table('products')->insert([
                 'name' => ('product' . $var),
                 'price' => (100 * $var),
                 'weight' => (200 * $var),
