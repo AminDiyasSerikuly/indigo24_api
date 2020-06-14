@@ -31,7 +31,7 @@ class LoginController extends Controller
             $orders[$order->product->id] = $order->product->name;
         }
 
-        $user = array_merge(\Auth::user()->toArray(), ['order' => $orders]);
+        $user = array_merge(\Auth::user()->toArray(), ['products' => $orders]);
 
 
         $token = \Auth::user()->createToken('authToken')->accessToken;
