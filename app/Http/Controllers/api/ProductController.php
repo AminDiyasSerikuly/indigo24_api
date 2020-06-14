@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Order;
 use App\Product;
+use App\User;
 use App\UserProduct;
 use DB;
 use Illuminate\Http\Request;
@@ -18,7 +19,6 @@ class ProductController extends Controller
     {
         $redis = Redis::connection();
         $userBalance = \Auth::user()->balance;
-
 
         $rules = [
             'product_id' => 'required',
@@ -60,6 +60,11 @@ class ProductController extends Controller
             'total_price' => $total_price,
             'created_at' => date('Y:m:d H:m:i'),
         ];
+
+        /** @var User $user */
+        $user = User::where(['id' => \Auth::user()->id])->first();
+        $user->balance = $user->balance - $total_price;
+        $user->save();
 
         array_push($tempProducts, $newProducts);
         $redis->set('temp_products', json_encode($tempProducts));
